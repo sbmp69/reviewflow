@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Upload } from "lucide-react";
+import { Plus, Upload, Users } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 
 interface Customer {
