@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Star, Search, Bell, ChevronDown, Menu, TrendingUp, Users, MessageSquare, MousePointerClick } from "lucide-react";
+import { ArrowRight, Star, Search, Bell, ChevronDown, Menu, TrendingUp, Users, MessageSquare, MousePointerClick, Zap } from "lucide-react";
 
 export default function Home() {
   return (
