@@ -18,6 +18,7 @@ export default function NewCustomerPage() {
   const router = useRouter();
 
   const [name, setName] = useState("");
+  const [countryCode, setCountryCode] = useState("91");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [amount, setAmount] = useState("");
@@ -35,6 +36,15 @@ export default function NewCustomerPage() {
       return;
     }
     
+    // Clean up phone number (remove any non-digits, just in case)
+    const cleanPhone = phone.replace(/[^0-9]/g, "");
+    if (cleanPhone.length < 10) {
+      setError("Please enter a valid 10-digit mobile number.");
+      return;
+    }
+
+    const fullPhone = `${countryCode}${cleanPhone}`;
+    
     setIsSubmitting(true);
     setError("");
 
@@ -43,7 +53,7 @@ export default function NewCustomerPage() {
       const customerRef = await addDoc(collection(db, "customers"), {
         organization_id: organizationId,
         name,
-        phone,
+        phone: fullPhone,
         email: email || null,
         consent_status: hasConsent ? "granted" : "revoked",
         created_at: serverTimestamp(),
@@ -78,13 +88,15 @@ export default function NewCustomerPage() {
         });
 
         if (!response.ok) {
-          let errorText = "";
+          const text = await response.text();
+          let errorText = text;
           try {
-            const resData = await response.json();
+            const resData = JSON.parse(text);
             errorText = resData.error || JSON.stringify(resData);
           } catch (e) {
-            errorText = await response.text();
+            // Not JSON, just use text
           }
+          
           throw new Error(`Scheduling failed (HTTP ${response.status}): ${errorText || "Empty response from server"}`);
         }
       }
@@ -111,7 +123,7 @@ export default function NewCustomerPage() {
           </CardHeader>
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-6 pt-6">
-              {error && <div className="text-red-600 bg-red-50/50 border border-red-200 p-3 rounded-md text-sm font-medium">{error}</div>}
+              {error && <div className="text-red-600 bg-red-50/50 border border-red-200 p-4 rounded-md text-sm font-medium break-words whitespace-pre-wrap">{error}</div>}
               
               <div className="space-y-2">
                 <Label htmlFor="name" className="text-slate-700 font-medium">Full Name</Label>
@@ -127,15 +139,26 @@ export default function NewCustomerPage() {
               
               <div className="space-y-2">
                 <Label htmlFor="phone" className="text-slate-700 font-medium">WhatsApp Number</Label>
-                <Input
-                  id="phone"
-                  placeholder="e.g. 919876543210 (Include country code)"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required
-                  className="bg-slate-50"
-                />
-                <p className="text-xs text-slate-500">Must include country code without the +. E.g. 91 for India.</p>
+                <div className="flex gap-2">
+                  <select 
+                    value={countryCode} 
+                    onChange={(e) => setCountryCode(e.target.value)}
+                    className="flex h-10 w-[100px] items-center justify-between rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <option value="91">+91 (IN)</option>
+                    <option value="1">+1 (US)</option>
+                    <option value="44">+44 (UK)</option>
+                    <option value="61">+61 (AU)</option>
+                  </select>
+                  <Input
+                    id="phone"
+                    placeholder="9876543210"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                    className="bg-slate-50 flex-1"
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
