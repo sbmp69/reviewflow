@@ -4,19 +4,23 @@ import { FieldValue } from "firebase-admin/firestore";
 
 // Meta verification
 export async function GET(req: Request) {
-  const url = new URL(req.url);
-  const mode = url.searchParams.get("hub.mode");
-  const token = url.searchParams.get("hub.verify_token");
-  const challenge = url.searchParams.get("hub.challenge");
+  try {
+    const url = new URL(req.url);
+    const mode = url.searchParams.get("hub.mode");
+    const token = url.searchParams.get("hub.verify_token");
+    const challenge = url.searchParams.get("hub.challenge");
 
-  const verifyToken = process.env.WHATSAPP_VERIFY_TOKEN;
+    const verifyToken = process.env.WHATSAPP_VERIFY_TOKEN;
 
-  if (mode && token) {
-    if (mode === "subscribe" && token === verifyToken) {
-      return new NextResponse(challenge, { status: 200 });
+    if (mode && token) {
+      if (mode === "subscribe" && token === verifyToken) {
+        return new NextResponse(challenge, { status: 200 });
+      }
     }
+    return NextResponse.json({ error: "Unauthorized", receivedToken: token, expectedToken: verifyToken ? "set" : "missing" }, { status: 403 });
+  } catch (error: any) {
+    return NextResponse.json({ error: "Crash", message: error.message || String(error) }, { status: 500 });
   }
-  return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
 }
 
 // Meta Webhook Events
