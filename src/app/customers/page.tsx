@@ -45,14 +45,21 @@ export default function CustomersPage() {
       try {
         const q = query(
           collection(db, "customers"),
-          where("organization_id", "==", organizationId),
-          orderBy("created_at", "desc")
+          where("organization_id", "==", organizationId)
         );
         const snapshot = await getDocs(q);
         const fetched = snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         })) as Customer[];
+        
+        // Sort in memory to avoid needing a Firestore composite index
+        fetched.sort((a, b) => {
+          const dateA = a.created_at?.toDate ? a.created_at.toDate().getTime() : 0;
+          const dateB = b.created_at?.toDate ? b.created_at.toDate().getTime() : 0;
+          return dateB - dateA;
+        });
+        
         setCustomers(fetched);
       } catch (error) {
         console.error("Error fetching customers:", error);
