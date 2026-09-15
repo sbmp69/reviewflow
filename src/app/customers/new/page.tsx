@@ -78,9 +78,14 @@ export default function NewCustomerPage() {
         });
 
         if (!response.ok) {
-          const resData = await response.json();
-          console.error("Schedule API Failed:", resData);
-          // We won't block redirecting, but this means the message might not send
+          let errorText = "";
+          try {
+            const resData = await response.json();
+            errorText = resData.error || JSON.stringify(resData);
+          } catch (e) {
+            errorText = await response.text();
+          }
+          throw new Error(`Scheduling failed (HTTP ${response.status}): ${errorText || "Empty response from server"}`);
         }
       }
 

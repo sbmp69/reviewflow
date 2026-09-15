@@ -27,5 +27,18 @@ export const getAdminDb = () => getFirestore(app);
 export const getAdminAuth = () => getAuth(app);
 
 // Keep backwards compatibility for routes that import it directly
-export const adminDb = new Proxy({}, { get: (_, prop) => getFirestore(app)[prop] });
-export const adminAuth = new Proxy({}, { get: (_, prop) => getAuth(app)[prop] });
+export const adminDb = new Proxy({} as any, { 
+  get: (_, prop) => {
+    const db = getFirestore(app);
+    const value = (db as any)[prop];
+    return typeof value === 'function' ? value.bind(db) : value;
+  }
+});
+
+export const adminAuth = new Proxy({} as any, { 
+  get: (_, prop) => {
+    const auth = getAuth(app);
+    const value = (auth as any)[prop];
+    return typeof value === 'function' ? value.bind(auth) : value;
+  }
+});
