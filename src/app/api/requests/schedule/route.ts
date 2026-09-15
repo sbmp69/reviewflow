@@ -42,11 +42,16 @@ export async function POST(req: Request) {
     const db = getFirestore(app);
 
     // 1. Find an active campaign
-    const campaignsSnapshot = await db.collection("campaigns")
-      .where("organization_id", "==", organizationId)
-      .where("status", "==", "active")
-      .limit(1)
-      .get();
+    let campaignsSnapshot;
+    try {
+      campaignsSnapshot = await db.collection("campaigns")
+        .where("organization_id", "==", organizationId)
+        .where("status", "==", "active")
+        .limit(1)
+        .get();
+    } catch (e: any) {
+      return NextResponse.json({ error: "Firebase DB Error: " + e.message }, { status: 500 });
+    }
 
     if (campaignsSnapshot.empty) {
       return NextResponse.json({ message: "No active campaigns found" }, { status: 200 });
@@ -70,7 +75,7 @@ export async function POST(req: Request) {
     });
 
     // 3. If delay is 0, send immediately and bypass Inngest
-    if (delayMinutes === 0) {
+    if (delayMinutes === 0 || delayMinutes === "0") {
       const customerDoc = await db.collection("customers").doc(customerId).get();
       const customer = customerDoc.data();
       
@@ -86,7 +91,7 @@ export async function POST(req: Request) {
 
         if (!token || !phoneId) {
           await reqRef.update({ status: "failed", reason: "Missing WhatsApp Credentials" });
-          return NextResponse.json({ error: "WhatsApp credentials missing on server" }, { status: 500 });
+          return NextResponse.json({ error: "Missing WhatsApp Credentials on Server" }, { status: 500 });
         }
 
         const url = `https://graph.facebook.com/v17.0/${phoneId}/messages`;
@@ -107,9 +112,9 @@ export async function POST(req: Request) {
         const resData = await response.json();
 
         if (!response.ok) {
-          const errMsg = resData.error?.message || "WhatsApp API Error";
+          const errMsg = resData.error?.message || "Unknown error";
           await reqRef.update({ status: "failed", reason: errMsg });
-          return NextResponse.json({ error: errMsg }, { status: 500 });
+          return NextResponse.json({ error: "WhatsApp Meta API Error: " + errMsg }, { status: 500 });
         }
 
         // Success
@@ -132,21 +137,25 @@ export async function POST(req: Request) {
     }
 
     // 4. Trigger Inngest for delayed campaigns
-    await inngest.send({
-      name: "review/request.scheduled",
-      data: {
-        organizationId,
-        customerId,
-        transactionId,
-        reviewRequestId: reqRef.id,
-        delayMinutes,
-        cooldownDays: campaign.cooldown_days || 30,
-        language,
-      }
-    });
+    try {
+      await inngest.send({
+        name: "review/request.scheduled",
+        data: {
+          organizationId,
+          customerId,
+          transactionId,
+          reviewRequestId: reqRef.id,
+          delayMinutes,
+          cooldownDays: campaign.cooldown_days || 30,
+          language,
+        }
+      });
+    } catch (e: any) {
+      return NextResponse.json({ error: "Inngest API Error: " + e.message }, { status: 500 });
+    }
 
     return NextResponse.json({ message: "Scheduled successfully", requestId: reqRef.id }, { status: 200 });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || "Unknown internal error" }, { status: 500 });
+    return NextResponse.json({ error: "Global API Error: " + error.message }, { status: 500 });
   }
 }
