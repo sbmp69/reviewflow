@@ -24,5 +24,15 @@ service cloud.firestore {
       allow create: if isAuthenticated();
       allow read, update, delete: if isAuthenticated();
     }
+
+    // Customers
+    match /customers/{customerId} {
+      allow create, read, update, delete: if isAuthenticated();
+    }
+
+    // Transactions
+    match /transactions/{transactionId} {
+      allow create, read, update, delete: if isAuthenticated();
+    }
   }
 }
