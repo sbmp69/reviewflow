@@ -46,6 +46,8 @@ export async function POST(req: Request) {
         transactionId,
         reviewRequestId: reqRef.id,
         delayMinutes: campaign.delay_minutes || 0,
+        cooldownDays: campaign.cooldown_days || 30,
+        language: campaign.language || "english",
       }
     });
 

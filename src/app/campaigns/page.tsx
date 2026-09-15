@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { collection, query, where, getDocs, addDoc, updateDoc, doc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase/config";
@@ -22,7 +22,9 @@ export default function CampaignsPage() {
   // New campaign form state
   const [showNew, setShowNew] = useState(false);
   const [name, setName] = useState("");
-  const [delayMinutes, setDelayMinutes] = useState(120); // default 2 hours
+  const [delayMinutes, setDelayMinutes] = useState(120);
+  const [language, setLanguage] = useState("english");
+  const [cooldownDays, setCooldownDays] = useState(30);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -31,7 +33,7 @@ export default function CampaignsPage() {
     }
   }, [user, loading, router]);
 
-  const fetchCampaigns = async () => {
+  const fetchCampaigns = useCallback(async () => {
     if (!organizationId) return;
     try {
       const q = query(collection(db, "campaigns"), where("organization_id", "==", organizationId));
@@ -43,11 +45,11 @@ export default function CampaignsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [organizationId]);
 
   useEffect(() => {
     fetchCampaigns();
-  }, [organizationId]);
+  }, [fetchCampaigns]);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,6 +60,8 @@ export default function CampaignsPage() {
         organization_id: organizationId,
         name,
         delay_minutes: Number(delayMinutes),
+        language,
+        cooldown_days: Number(cooldownDays),
         channel: "whatsapp",
         status: "active",
         created_at: serverTimestamp(),
@@ -66,6 +70,8 @@ export default function CampaignsPage() {
       setShowNew(false);
       setName("");
       setDelayMinutes(120);
+      setLanguage("english");
+      setCooldownDays(30);
       fetchCampaigns();
     } catch (err) {
       console.error(err);
@@ -104,18 +110,33 @@ export default function CampaignsPage() {
         <Card className="mb-8">
           <CardHeader>
             <CardTitle>Create Campaign</CardTitle>
-            <CardDescription>Automatically send review requests after a sale.</CardDescription>
+            <CardDescription>Configure smart automation rules for your review requests.</CardDescription>
           </CardHeader>
           <form onSubmit={handleCreate}>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Campaign Name</Label>
-                <Input id="name" required placeholder="e.g. Post-Purchase Follow-up" value={name} onChange={e => setName(e.target.value)} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="delay">Delay (minutes)</Label>
-                <Input id="delay" type="number" required min="0" value={delayMinutes} onChange={e => setDelayMinutes(Number(e.target.value))} />
-                <p className="text-xs text-gray-500">Wait this many minutes after a sale before sending the request. (e.g. 120 = 2 hours)</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Campaign Name</Label>
+                  <Input id="name" required placeholder="e.g. Post-Purchase Follow-up" value={name} onChange={e => setName(e.target.value)} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="language">Message Language</Label>
+                  <select id="language" required className="flex h-10 w-full rounded-md border border-slate-300 bg-transparent px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50" value={language} onChange={e => setLanguage(e.target.value)}>
+                    <option value="english">English</option>
+                    <option value="hindi">Hindi</option>
+                    <option value="gujarati">Gujarati</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="delay">Delay (minutes)</Label>
+                  <Input id="delay" type="number" required min="0" value={delayMinutes} onChange={e => setDelayMinutes(Number(e.target.value))} />
+                  <p className="text-xs text-gray-500">Wait this long after a sale before sending.</p>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="cooldown">Cooldown (days)</Label>
+                  <Input id="cooldown" type="number" required min="0" value={cooldownDays} onChange={e => setCooldownDays(Number(e.target.value))} />
+                  <p className="text-xs text-gray-500">Prevent spamming the same customer within this period.</p>
+                </div>
               </div>
             </CardContent>
             <CardFooter className="gap-4">
@@ -131,8 +152,9 @@ export default function CampaignsPage() {
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
-              <TableHead>Channel</TableHead>
+              <TableHead>Language</TableHead>
               <TableHead>Delay</TableHead>
+              <TableHead>Cooldown</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -140,7 +162,7 @@ export default function CampaignsPage() {
           <TableBody>
             {campaigns.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-gray-500">
+                <TableCell colSpan={6} className="text-center py-8 text-gray-500">
                   No campaigns configured.
                 </TableCell>
               </TableRow>
@@ -148,8 +170,9 @@ export default function CampaignsPage() {
               campaigns.map((c) => (
                 <TableRow key={c.id}>
                   <TableCell className="font-medium">{c.name}</TableCell>
-                  <TableCell className="capitalize">{c.channel}</TableCell>
-                  <TableCell>{c.delay_minutes} minutes</TableCell>
+                  <TableCell className="capitalize">{c.language || "English"}</TableCell>
+                  <TableCell>{c.delay_minutes} mins</TableCell>
+                  <TableCell>{c.cooldown_days || 30} days</TableCell>
                   <TableCell>
                     <span className={`px-2 py-1 rounded-full text-xs font-semibold ${c.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
                       {c.status}
