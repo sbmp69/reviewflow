@@ -8,6 +8,7 @@ import { signOut } from "firebase/auth";
 import { collection, query, where, getCountFromServer } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BarChart3 } from "lucide-react";
 
 export default function DashboardPage() {
   const { user, organizationId, loading } = useAuth();
@@ -38,7 +39,7 @@ export default function DashboardPage() {
         const sentQ = query(collection(db, "review_requests"), where("organization_id", "==", organizationId), where("status", "in", ["sent", "delivered", "read"]));
         const sentSnap = await getCountFromServer(sentQ);
         
-        // 3. Delivered Requests
+        // 3. Delivered Requests (Webhook confirmed)
         const delQ = query(collection(db, "review_requests"), where("organization_id", "==", organizationId), where("status", "in", ["delivered", "read"]));
         const delSnap = await getCountFromServer(delQ);
         
@@ -69,9 +70,9 @@ export default function DashboardPage() {
     return <div className="p-8 flex justify-center items-center h-screen">Loading...</div>;
   }
 
-  // Calculate Conversion Rate safely
-  const conversionRate = metrics.requestsSent > 0 
-    ? ((metrics.clicks / metrics.requestsSent) * 100).toFixed(1) 
+  // Calculate Conversion Rate safely based on delivered messages
+  const conversionRate = metrics.requestsDelivered > 0 
+    ? ((metrics.clicks / metrics.requestsDelivered) * 100).toFixed(1) 
     : "0.0";
 
   return (
@@ -130,13 +131,14 @@ export default function DashboardPage() {
       </div>
 
       <Card className="bg-gray-50 border-dashed">
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center gap-2">
+          <BarChart3 className="w-5 h-5 text-gray-500" />
           <CardTitle>Review Funnel</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col space-y-4">
             <div className="flex items-center">
-              <div className="w-32 font-medium">Customers</div>
+              <div className="w-32 font-medium text-gray-700">Customers</div>
               <div className="flex-1">
                 <div className="h-6 bg-blue-100 rounded-r-md" style={{ width: '100%' }}>
                   <span className="pl-2 text-sm font-bold text-blue-800 leading-6">{metrics.customers}</span>
@@ -144,18 +146,26 @@ export default function DashboardPage() {
               </div>
             </div>
             <div className="flex items-center">
-              <div className="w-32 font-medium">Sent</div>
+              <div className="w-32 font-medium text-gray-700">Sent</div>
               <div className="flex-1">
-                <div className="h-6 bg-indigo-100 rounded-r-md transition-all" style={{ width: metrics.customers > 0 ? `${(metrics.requestsSent / metrics.customers) * 100}%` : '0%' }}>
+                <div className="h-6 bg-indigo-100 rounded-r-md transition-all duration-1000" style={{ width: metrics.customers > 0 ? `${(metrics.requestsSent / metrics.customers) * 100}%` : '0%' }}>
                   <span className="pl-2 text-sm font-bold text-indigo-800 leading-6">{metrics.requestsSent}</span>
                 </div>
               </div>
             </div>
             <div className="flex items-center">
-              <div className="w-32 font-medium">Clicked</div>
+              <div className="w-32 font-medium text-gray-700">Delivered <span className="text-[10px] bg-green-200 text-green-800 px-1 rounded ml-1">Live</span></div>
               <div className="flex-1">
-                <div className="h-6 bg-green-100 rounded-r-md transition-all" style={{ width: metrics.customers > 0 ? `${(metrics.clicks / metrics.customers) * 100}%` : '0%' }}>
-                  <span className="pl-2 text-sm font-bold text-green-800 leading-6">{metrics.clicks}</span>
+                <div className="h-6 bg-emerald-100 rounded-r-md transition-all duration-1000" style={{ width: metrics.customers > 0 ? `${(metrics.requestsDelivered / metrics.customers) * 100}%` : '0%' }}>
+                  <span className="pl-2 text-sm font-bold text-emerald-800 leading-6">{metrics.requestsDelivered}</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center">
+              <div className="w-32 font-medium text-gray-700">Clicked</div>
+              <div className="flex-1">
+                <div className="h-6 bg-purple-100 rounded-r-md transition-all duration-1000" style={{ width: metrics.customers > 0 ? `${(metrics.clicks / metrics.customers) * 100}%` : '0%' }}>
+                  <span className="pl-2 text-sm font-bold text-purple-800 leading-6">{metrics.clicks}</span>
                 </div>
               </div>
             </div>
