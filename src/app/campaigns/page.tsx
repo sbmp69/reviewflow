@@ -23,7 +23,7 @@ export default function CampaignsPage() {
   // New campaign form state
   const [showNew, setShowNew] = useState(false);
   const [name, setName] = useState("");
-  const [delayMinutes, setDelayMinutes] = useState(0); // Changed default to 0 (immediate)
+  const [delayMinutes, setDelayMinutes] = useState(30); // Changed default to 30 mins
   const [language, setLanguage] = useState("english");
   const [cooldownDays, setCooldownDays] = useState(30);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -70,7 +70,7 @@ export default function CampaignsPage() {
       });
       setShowNew(false);
       setName("");
-      setDelayMinutes(0);
+      setDelayMinutes(30);
       setLanguage("english");
       setCooldownDays(30);
       fetchCampaigns();
