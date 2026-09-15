@@ -4,8 +4,7 @@ import { FieldValue } from "firebase-admin/firestore";
 import { sendWhatsAppTemplate } from "@/lib/whatsapp/send";
 
 export const processReviewRequest = inngest.createFunction(
-  { id: "process-review-request" },
-  { event: "review/request.scheduled" },
+  { id: "process-review-request", event: "review/request.scheduled" },
   async ({ event, step }) => {
     const { organizationId, customerId, transactionId, delayMinutes, reviewRequestId } = event.data;
 
