@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Star, Search, Bell, ChevronDown, Menu, TrendingUp, Users, MessageSquare, MousePointerClick, Zap } from "lucide-react";
+import { ArrowRight, Star, Search, Bell, ChevronDown, Menu, TrendingUp, Users, MessageSquare, MousePointerClick, Zap, CheckCircle2, BarChart3 } from "lucide-react";
 
 export default function Home() {
   return (
@@ -185,17 +185,215 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6 text-center">
           <p className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-8">Seamlessly Integrates With</p>
           <div className="flex flex-wrap justify-center gap-12 items-center opacity-70 grayscale">
-            {/* Google */}
             <div className="text-2xl font-bold flex items-center gap-2"><Star className="h-6 w-6"/> Google Business</div>
-            {/* WhatsApp */}
             <div className="text-2xl font-bold flex items-center gap-2"><MessageSquare className="h-6 w-6"/> WhatsApp API</div>
-            {/* Razorpay */}
             <div className="text-2xl font-bold flex items-center gap-2"><div className="h-6 w-6 bg-blue-600 rounded"></div> Razorpay</div>
-            {/* Firebase */}
             <div className="text-2xl font-bold flex items-center gap-2"><Zap className="h-6 w-6"/> Firebase</div>
           </div>
         </div>
       </section>
+
+      {/* Why Choose Section */}
+      <section id="features" className="py-24 bg-[#FAFAFC] relative">
+        <div className="mx-auto max-w-[1240px] px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-extrabold text-gray-900 mb-4">Why Choose ReviewFlow?</h2>
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">Everything you need to turn casual visitors into powerful 5-star Google reviews.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Feature 1 */}
+            <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm flex flex-col">
+              <div className="bg-gray-50 rounded-2xl p-6 mb-8 flex-1 flex items-center justify-center border border-gray-100 min-h-[200px]">
+                {/* Mini UI Visual 1 */}
+                <div className="bg-white p-4 rounded-xl shadow-sm w-full border border-gray-100 relative overflow-hidden">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-xs font-semibold text-gray-500 flex items-center gap-1"><TrendingUp className="h-3 w-3 text-blue-500"/> Conversion</span>
+                    <span className="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full">Healthy</span>
+                  </div>
+                  <div className="text-3xl font-extrabold text-gray-900 mb-4">44%</div>
+                  <div className="h-10 w-full relative">
+                    <svg viewBox="0 0 100 30" className="w-full h-full overflow-visible" preserveAspectRatio="none">
+                      <path d="M0,25 Q20,25 40,15 T100,5" fill="none" stroke="#3B82F6" strokeWidth="3" strokeLinecap="round"/>
+                      <path d="M0,25 Q20,25 40,15 T100,5 L100,30 L0,30 Z" fill="url(#blue-grad)" className="opacity-20"/>
+                      <defs>
+                        <linearGradient id="blue-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#3B82F6"/><stop offset="100%" stopColor="transparent"/></linearGradient>
+                      </defs>
+                    </svg>
+                  </div>
+                  <div className="absolute bottom-2 right-2 bg-blue-600 text-white text-[9px] font-bold px-2 py-1 rounded-full shadow-md">
+                    +18% More Reviews
+                  </div>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Automated Review Requests</h3>
+              <p className="text-gray-500 text-sm leading-relaxed">Turn one-time visitors into vocal advocates with perfectly timed WhatsApp messages sent automatically after every purchase.</p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm flex flex-col">
+              <div className="bg-gray-50 rounded-2xl p-6 mb-8 flex-1 flex items-center justify-center border border-gray-100 min-h-[200px]">
+                {/* Mini UI Visual 2 - Node Diagram */}
+                <div className="relative w-full h-full flex items-center justify-center">
+                  {/* Center Node */}
+                  <div className="z-10 bg-white border shadow-md rounded-xl py-2 px-4 flex items-center gap-2 font-bold text-sm text-gray-900">
+                    <div className="h-6 w-6 bg-blue-600 rounded flex items-center justify-center text-white text-[10px]">R</div>
+                    ReviewFlow
+                  </div>
+                  {/* Surrounding Nodes */}
+                  <div className="absolute top-2 left-4 bg-white border shadow-sm rounded-full py-1 px-3 text-[10px] font-semibold text-gray-600 flex items-center gap-1"><Star className="h-3 w-3 text-amber-500"/> Google</div>
+                  <div className="absolute top-2 right-4 bg-white border shadow-sm rounded-full py-1 px-3 text-[10px] font-semibold text-gray-600 flex items-center gap-1"><MessageSquare className="h-3 w-3 text-green-500"/> WhatsApp</div>
+                  <div className="absolute bottom-2 left-6 bg-white border shadow-sm rounded-full py-1 px-3 text-[10px] font-semibold text-gray-600 flex items-center gap-1"><Users className="h-3 w-3 text-blue-500"/> POS Import</div>
+                  <div className="absolute bottom-2 right-6 bg-white border shadow-sm rounded-full py-1 px-3 text-[10px] font-semibold text-gray-600 flex items-center gap-1"><BarChart3 className="h-3 w-3 text-purple-500"/> Analytics</div>
+                  
+                  {/* Dashed lines connecting them (simplified SVG) */}
+                  <svg className="absolute inset-0 h-full w-full pointer-events-none" style={{ zIndex: 0 }}>
+                    <line x1="50%" y1="50%" x2="25%" y2="25%" stroke="#CBD5E1" strokeWidth="1.5" strokeDasharray="4 4" />
+                    <line x1="50%" y1="50%" x2="75%" y2="25%" stroke="#CBD5E1" strokeWidth="1.5" strokeDasharray="4 4" />
+                    <line x1="50%" y1="50%" x2="30%" y2="75%" stroke="#CBD5E1" strokeWidth="1.5" strokeDasharray="4 4" />
+                    <line x1="50%" y1="50%" x2="70%" y2="75%" stroke="#CBD5E1" strokeWidth="1.5" strokeDasharray="4 4" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">All-in-One Funnel</h3>
+              <p className="text-gray-500 text-sm leading-relaxed">Everything works together. Upload your daily sales via CSV, and we handle the exact timing, messaging, and tracking of the review funnel.</p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm flex flex-col">
+              <div className="bg-gray-50 rounded-2xl p-6 mb-8 flex-1 flex items-center justify-center border border-gray-100 min-h-[200px]">
+                {/* Mini UI Visual 3 - Flow */}
+                <div className="w-full space-y-3">
+                  <div className="bg-white border rounded-lg p-2.5 flex justify-between items-center shadow-sm relative z-10">
+                    <div className="flex items-center gap-2"><div className="bg-gray-100 p-1 rounded"><Users className="h-3 w-3 text-gray-600"/></div><span className="text-xs font-bold text-gray-800">Customer Visit</span></div>
+                    <span className="bg-emerald-100 text-emerald-700 text-[9px] font-bold px-2 py-0.5 rounded-full">Sale Completed</span>
+                  </div>
+                  <div className="flex justify-center -my-1"><div className="h-4 border-l-2 border-dashed border-gray-300"></div></div>
+                  <div className="bg-white border rounded-lg p-2.5 flex justify-between items-center shadow-sm relative z-10">
+                    <div className="flex items-center gap-2"><div className="bg-blue-50 p-1 rounded"><MessageSquare className="h-3 w-3 text-blue-600"/></div><span className="text-xs font-bold text-gray-800">WhatsApp Sent</span></div>
+                    <span className="bg-blue-100 text-blue-700 text-[9px] font-bold px-2 py-0.5 rounded-full">Automated 2h later</span>
+                  </div>
+                  <div className="flex justify-center -my-1"><div className="h-4 border-l-2 border-dashed border-gray-300"></div></div>
+                  <div className="bg-white border rounded-lg p-2.5 flex justify-between items-center shadow-sm ring-2 ring-blue-500/20 relative z-10">
+                    <div className="flex items-center gap-2"><div className="bg-amber-50 p-1 rounded"><Star className="h-3 w-3 text-amber-500"/></div><span className="text-xs font-bold text-gray-800">Google Review</span></div>
+                    <span className="bg-indigo-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm">5 Stars Recorded</span>
+                  </div>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Set it & Grow</h3>
+              <p className="text-gray-500 text-sm leading-relaxed">Automate follow-ups and review gathering so your local business keeps growing its online reputation while you focus on running the shop.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How it Works Section (Zigzag) */}
+      <section id="how-it-works" className="py-24 bg-white overflow-hidden">
+        <div className="mx-auto max-w-[1240px] px-6">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl font-extrabold text-gray-900 mb-4">How ReviewFlow Works</h2>
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">Three simple steps to put your Google Business Profile on steroids.</p>
+          </div>
+
+          <div className="space-y-24">
+            {/* Step 1 */}
+            <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20">
+              <div className="flex-1 space-y-6">
+                <div className="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-blue-100 text-blue-700 font-bold text-lg">1</div>
+                <h3 className="text-3xl font-extrabold text-gray-900">Log Your Daily Sales</h3>
+                <p className="text-lg text-gray-600 leading-relaxed">Simply upload your daily POS spreadsheet via CSV, or quickly add a customer manually in our beautiful dashboard. We instantly ingest names, phone numbers, and purchases.</p>
+                <ul className="space-y-3">
+                  <li className="flex items-center gap-3 text-gray-600"><CheckCircle2 className="h-5 w-5 text-emerald-500"/> Bulk upload up to 500 customers instantly</li>
+                  <li className="flex items-center gap-3 text-gray-600"><CheckCircle2 className="h-5 w-5 text-emerald-500"/> Mobile-friendly manual entry</li>
+                </ul>
+              </div>
+              <div className="flex-1 w-full">
+                <div className="relative rounded-2xl bg-gray-50 border shadow-lg p-6">
+                  <div className="bg-white border rounded-lg p-4 shadow-sm">
+                    <div className="flex justify-between items-center mb-4 border-b pb-4">
+                      <span className="font-bold text-gray-800">CSV Import Dashboard</span>
+                      <Button size="sm">Upload Data</Button>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="h-8 bg-gray-100 rounded animate-pulse"></div>
+                      <div className="h-8 bg-gray-50 rounded animate-pulse w-5/6"></div>
+                      <div className="h-8 bg-gray-50 rounded animate-pulse w-4/6"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 2 */}
+            <div className="flex flex-col md:flex-row-reverse items-center gap-12 lg:gap-20">
+              <div className="flex-1 space-y-6">
+                <div className="inline-flex items-center justify-center h-10 w-10 rounded-xl bg-blue-100 text-blue-700 font-bold text-lg">2</div>
+                <h3 className="text-3xl font-extrabold text-gray-900">We Automate the Rest</h3>
+                <p className="text-lg text-gray-600 leading-relaxed">Our Inngest-powered background engine waits for exactly the right moment (e.g., 2 hours after a visit) and dispatches a polite, customized WhatsApp template asking for feedback.</p>
+                <ul className="space-y-3">
+                  <li className="flex items-center gap-3 text-gray-600"><CheckCircle2 className="h-5 w-5 text-emerald-500"/> Official Meta WhatsApp API integration</li>
+                  <li className="flex items-center gap-3 text-gray-600"><CheckCircle2 className="h-5 w-5 text-emerald-500"/> Perfect timing increases conversions by 40%</li>
+                </ul>
+              </div>
+              <div className="flex-1 w-full relative">
+                {/* Chat Bubble Mockup */}
+                <div className="relative max-w-xs mx-auto">
+                  <div className="bg-[#EFEFEF] rounded-[2rem] p-3 shadow-xl border-4 border-gray-900">
+                    <div className="bg-white rounded-t-3xl rounded-b-xl px-4 py-3 mb-2 shadow-sm text-sm text-gray-800 border">
+                      <p className="font-semibold mb-1">ReviewFlow Spa</p>
+                      <p>Hi Sarah! Thanks for visiting us today. We hope you loved your session.</p>
+                    </div>
+                    <div className="bg-white rounded-xl px-4 py-3 shadow-sm text-sm text-gray-800 border">
+                      <p>Would you mind taking 10 seconds to leave us a quick Google review? It helps us a lot! ❤️</p>
+                      <div className="mt-3 text-blue-600 font-bold border-t pt-2 text-center text-xs">
+                        Leave a Review
+                      </div>
+                    </div>
+                    <div className="text-right text-[10px] text-gray-500 mt-2 pr-2">Read 2:14 PM <CheckCircle2 className="inline h-3 w-3 text-blue-500"/></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="relative py-24 bg-gray-900 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-blue-600/30 blur-[100px] rounded-full"></div>
+        </div>
+        <div className="relative mx-auto max-w-4xl px-6 text-center z-10">
+          <h2 className="text-4xl sm:text-5xl font-extrabold text-white mb-6 tracking-tight">Ready to dominate your local SEO?</h2>
+          <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+            Stop waiting for customers to review you. Join the businesses automatically generating 5-star reputations every single day.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <Link href="/signup" className="w-full sm:w-auto rounded-full bg-white px-8 py-4 text-base font-bold text-gray-900 shadow-lg hover:bg-gray-50 hover:scale-105 transition-all">
+              Start 1 Month Free
+            </Link>
+            <Link href="/demo" className="w-full sm:w-auto rounded-full border border-gray-700 bg-gray-800/50 px-8 py-4 text-base font-bold text-white hover:bg-gray-800 transition-all">
+              Book a Demo
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-white border-t border-gray-100 py-8">
+        <div className="max-w-[1240px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500 gap-4">
+          <div className="flex items-center gap-2 font-bold text-gray-900 text-lg">
+            <div className="h-6 w-6 bg-blue-600 text-white rounded flex items-center justify-center text-xs">R</div>
+            ReviewFlow
+          </div>
+          <p>© {new Date().getFullYear()} ReviewFlow SaaS. All rights reserved.</p>
+          <div className="flex gap-4">
+            <Link href="#" className="hover:text-blue-600">Privacy</Link>
+            <Link href="#" className="hover:text-blue-600">Terms</Link>
+            <Link href="#" className="hover:text-blue-600">Contact</Link>
+          </div>
+        </div>
+      </footer>
 
     </div>
   );
