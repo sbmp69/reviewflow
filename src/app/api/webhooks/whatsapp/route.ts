@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import { adminDb } from "@/lib/firebase/admin";
-import { FieldValue } from "firebase-admin/firestore";
 
-// Meta verification
+// Meta verification - NO DEPENDENCIES
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
@@ -26,6 +24,10 @@ export async function GET(req: Request) {
 // Meta Webhook Events
 export async function POST(req: Request) {
   try {
+    // Dynamically import to prevent top-level crashes
+    const { adminDb } = await import("@/lib/firebase/admin");
+    const { FieldValue } = await import("firebase-admin/firestore");
+
     const body = await req.json();
 
     if (body.object !== "whatsapp_business_account") {
