@@ -32,6 +32,7 @@ export default function DashboardPage() {
         <h1 className="text-3xl font-bold">Dashboard</h1>
         <div className="space-x-4">
           <Button variant="outline" onClick={() => router.push('/customers')}>Customers</Button>
+          <Button variant="outline" onClick={() => router.push('/campaigns')}>Campaigns</Button>
           <Button variant="outline" onClick={() => router.push('/settings')}>Settings</Button>
           <Button variant="destructive" onClick={handleLogout}>Log Out</Button>
         </div>

@@ -50,8 +50,9 @@ export default function NewCustomerPage() {
       });
 
       // 2. Create Transaction Document
+      let transactionId = null;
       if (amount && parseFloat(amount) > 0) {
-        await addDoc(collection(db, "transactions"), {
+        const txRef = await addDoc(collection(db, "transactions"), {
           organization_id: organizationId,
           customer_id: customerRef.id,
           amount: parseFloat(amount),
@@ -59,6 +60,20 @@ export default function NewCustomerPage() {
           source: "manual",
           purchased_at: serverTimestamp(),
           created_at: serverTimestamp(),
+        });
+        transactionId = txRef.id;
+      }
+
+      // 3. Trigger Scheduling API
+      if (hasConsent) {
+        await fetch("/api/requests/schedule", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            organizationId,
+            customerId: customerRef.id,
+            transactionId
+          })
         });
       }
 
