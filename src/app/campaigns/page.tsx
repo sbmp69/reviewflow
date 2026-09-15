@@ -34,6 +34,8 @@ export default function CampaignsPage() {
     }
   }, [user, loading, router]);
 
+  const [editingId, setEditingId] = useState<string | null>(null);
+
   const fetchCampaigns = useCallback(async () => {
     if (!organizationId) return;
     try {
@@ -52,31 +54,55 @@ export default function CampaignsPage() {
     fetchCampaigns();
   }, [fetchCampaigns]);
 
+  const handleEditClick = (c: any) => {
+    setEditingId(c.id);
+    setName(c.name);
+    setLanguage(c.language || "english");
+    setDelayMinutes(c.delay_minutes || 0);
+    setCooldownDays(c.cooldown_days || 30);
+    setShowNew(true);
+  };
+
+  const handleCancel = () => {
+    setShowNew(false);
+    setEditingId(null);
+    setName("");
+    setDelayMinutes(30);
+    setLanguage("english");
+    setCooldownDays(30);
+  };
+
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!organizationId) return;
     setIsSubmitting(true);
     try {
-      await addDoc(collection(db, "campaigns"), {
-        organization_id: organizationId,
-        name,
-        delay_minutes: Number(delayMinutes),
-        language,
-        cooldown_days: Number(cooldownDays),
-        channel: "whatsapp",
-        status: "active",
-        created_at: serverTimestamp(),
-        updated_at: serverTimestamp(),
-      });
-      setShowNew(false);
-      setName("");
-      setDelayMinutes(30);
-      setLanguage("english");
-      setCooldownDays(30);
+      if (editingId) {
+        await updateDoc(doc(db, "campaigns", editingId), {
+          name,
+          delay_minutes: Number(delayMinutes),
+          language,
+          cooldown_days: Number(cooldownDays),
+          updated_at: serverTimestamp(),
+        });
+      } else {
+        await addDoc(collection(db, "campaigns"), {
+          organization_id: organizationId,
+          name,
+          delay_minutes: Number(delayMinutes),
+          language,
+          cooldown_days: Number(cooldownDays),
+          channel: "whatsapp",
+          status: "active",
+          created_at: serverTimestamp(),
+          updated_at: serverTimestamp(),
+        });
+      }
+      handleCancel();
       fetchCampaigns();
     } catch (err) {
       console.error(err);
-      alert("Failed to create campaign");
+      alert(editingId ? "Failed to update campaign" : "Failed to create campaign");
     } finally {
       setIsSubmitting(false);
     }
@@ -105,7 +131,7 @@ export default function CampaignsPage() {
             <h1 className="text-3xl font-bold tracking-tight text-slate-900">Campaigns</h1>
             <p className="text-slate-500 mt-2">Configure automation rules for your review requests.</p>
           </div>
-          <Button onClick={() => setShowNew(!showNew)} className="bg-blue-600 hover:bg-blue-700 text-white">
+          <Button onClick={() => { handleCancel(); setShowNew(true); }} className="bg-blue-600 hover:bg-blue-700 text-white">
             <Plus className="w-4 h-4 mr-2" />
             New Campaign
           </Button>
@@ -114,7 +140,7 @@ export default function CampaignsPage() {
         {showNew && (
           <Card className="border-slate-200 shadow-sm">
             <CardHeader>
-              <CardTitle>Create Campaign</CardTitle>
+              <CardTitle>{editingId ? "Edit Campaign" : "Create Campaign"}</CardTitle>
               <CardDescription>Set up when and how you ask your customers for reviews.</CardDescription>
             </CardHeader>
             <form onSubmit={handleCreate}>
@@ -145,9 +171,9 @@ export default function CampaignsPage() {
                 </div>
               </CardContent>
               <CardFooter className="gap-4">
-                <Button type="button" variant="outline" onClick={() => setShowNew(false)}>Cancel</Button>
+                <Button type="button" variant="outline" onClick={handleCancel}>Cancel</Button>
                 <Button type="submit" disabled={isSubmitting} className="bg-blue-600 hover:bg-blue-700 text-white">
-                  {isSubmitting ? "Saving..." : "Create Campaign"}
+                  {isSubmitting ? "Saving..." : (editingId ? "Update Campaign" : "Create Campaign")}
                 </Button>
               </CardFooter>
             </form>
@@ -191,7 +217,10 @@ export default function CampaignsPage() {
                         {c.status}
                       </span>
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right space-x-2">
+                      <Button variant="outline" size="sm" onClick={() => handleEditClick(c)}>
+                        Edit
+                      </Button>
                       <Button variant="outline" size="sm" onClick={() => toggleStatus(c.id, c.status)}>
                         {c.status === 'active' ? 'Pause' : 'Activate'}
                       </Button>
