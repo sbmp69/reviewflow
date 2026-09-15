@@ -53,5 +53,10 @@ service cloud.firestore {
     match /message_events/{eventId} {
       allow create, read, update, delete: if isAuthenticated();
     }
+
+    // Subscriptions
+    match /subscriptions/{subscriptionId} {
+      allow create, read, update, delete: if isAuthenticated();
+    }
   }
 }
