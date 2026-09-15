@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Function to check if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Users can read/write their own document
+    match /users/{userId} {
+      allow read, write: if isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Organizations
+    match /organizations/{orgId} {
+      allow create: if isAuthenticated();
+      // For phase 1 MVP, basic auth check. To properly secure this, 
+      // we would use a lookup to organization_members or custom claims.
+      allow read, update: if isAuthenticated(); 
+    }
+
+    // Organization Members
+    match /organization_members/{memberId} {
+      allow create: if isAuthenticated();
+      allow read, update, delete: if isAuthenticated();
+    }
+  }
+}
