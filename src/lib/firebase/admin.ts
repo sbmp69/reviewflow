@@ -3,12 +3,15 @@ import { getFirestore } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
 
 if (!getApps().length) {
+  // Vercel sometimes double-escapes newlines or wraps them in quotes
+  const rawKey = process.env.FIREBASE_PRIVATE_KEY || "";
+  const formattedKey = rawKey.replace(/\\n/g, '\n').replace(/^"|"$/g, '');
+
   initializeApp({
     credential: cert({
       projectId: process.env.FIREBASE_PROJECT_ID,
       clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      // Handle newline characters in the private key from environment variables
-      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      privateKey: formattedKey,
     }),
   });
 }
