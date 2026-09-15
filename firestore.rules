@@ -48,5 +48,10 @@ service cloud.firestore {
     match /review_requests/{requestId} {
       allow create, read, update, delete: if isAuthenticated();
     }
+
+    // Message Events
+    match /message_events/{eventId} {
+      allow create, read, update, delete: if isAuthenticated();
+    }
   }
 }
