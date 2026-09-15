@@ -1,44 +1,13 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Star, Search, Bell, ChevronDown, Menu, TrendingUp, Users, MessageSquare, MousePointerClick, Zap, CheckCircle2, BarChart3 } from "lucide-react";
+import { MarketingHeader } from "@/components/MarketingHeader";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#FAFAFC] font-sans antialiased overflow-hidden text-gray-900">
       
-      {/* Header */}
-      <header className="fixed inset-x-0 top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-        <div className="mx-auto flex max-w-[1240px] items-center justify-between px-6 h-20">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-xl group-hover:scale-105 transition-transform">
-              R
-            </div>
-            <span className="text-xl font-extrabold tracking-tight">ReviewFlow</span>
-          </Link>
-          
-          <nav className="hidden md:flex items-center gap-8">
-            <Link href="#features" className="text-[15px] font-semibold text-gray-700 hover:text-blue-600 transition-colors">Features</Link>
-            <Link href="#how-it-works" className="text-[15px] font-semibold text-gray-700 hover:text-blue-600 transition-colors">How it Works</Link>
-            <Link href="/pricing" className="text-[15px] font-semibold text-gray-700 hover:text-blue-600 transition-colors">Pricing</Link>
-          </nav>
-
-          <div className="hidden md:flex items-center gap-4">
-            <Link href="/login" className="text-[15px] font-semibold text-gray-700 hover:text-blue-600 transition-colors">
-              Log in
-            </Link>
-            <Link href="/signup" className="group flex items-center gap-2 rounded-full bg-[#1F242B] pl-6 pr-2 py-2 text-[14px] font-semibold text-white shadow-md transition-all hover:bg-blue-600 hover:shadow-lg hover:-translate-y-0.5">
-              <span>Get Started</span>
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#1F242B] group-hover:text-blue-600 transition-transform group-hover:translate-x-0.5">
-                <ArrowRight className="h-3.5 w-3.5 stroke-[2.5]" />
-              </div>
-            </Link>
-          </div>
-          
-          <button className="md:hidden p-2 text-gray-600">
-            <Menu className="w-6 h-6" />
-          </button>
-        </div>
-      </header>
+      <MarketingHeader />
 
       {/* Hero Section */}
       <main className="relative isolate pt-32 pb-16 w-full">

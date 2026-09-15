@@ -1,31 +1,11 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, MessageSquare, Star, Users, Zap, TrendingUp, Search } from "lucide-react";
+import { CheckCircle2, MessageSquare, Star, Users, Zap, TrendingUp, Search } from "lucide-react";
+import { MarketingHeader } from "@/components/MarketingHeader";
 
 export default function FeaturesPage() {
   return (
     <div className="min-h-screen bg-[#FAFAFC] font-sans antialiased text-gray-900 pt-28">
-      {/* Header */}
-      <header className="fixed inset-x-0 top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-        <div className="mx-auto flex max-w-[1240px] items-center justify-between px-6 h-20">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-xl group-hover:scale-105 transition-transform">R</div>
-            <span className="text-xl font-extrabold tracking-tight">ReviewFlow</span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-8">
-            <Link href="/features" className="text-[15px] font-semibold text-blue-600 transition-colors">Features</Link>
-            <Link href="/pricing" className="text-[15px] font-semibold text-gray-700 hover:text-blue-600 transition-colors">Pricing</Link>
-          </nav>
-          <div className="hidden md:flex items-center gap-4">
-            <Link href="/login" className="text-[15px] font-semibold text-gray-700 hover:text-blue-600">Log in</Link>
-            <Link href="/signup" className="group flex items-center gap-2 rounded-full bg-[#1F242B] pl-6 pr-2 py-2 text-[14px] font-semibold text-white shadow-md hover:bg-blue-600 transition-all hover:-translate-y-0.5">
-              <span>Get Started</span>
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#1F242B] group-hover:text-blue-600 transition-transform group-hover:translate-x-0.5">
-                <ArrowRight className="h-3.5 w-3.5 stroke-[2.5]" />
-              </div>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <MarketingHeader />
 
       {/* Hero */}
       <div className="relative isolate pt-12 pb-20 w-full text-center">
