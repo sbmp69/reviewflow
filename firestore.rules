@@ -13,15 +13,19 @@ service cloud.firestore {
 
     // Organizations
     match /organizations/{orgId} {
-      allow create: if isAuthenticated();
-      // For phase 1 MVP, basic auth check. To properly secure this, 
-      // we would use a lookup to organization_members or custom claims.
-      allow read, update: if isAuthenticated(); 
+      allow read: if true; // Public can read to render /r/[slug]
+      allow create, update: if isAuthenticated();
     }
 
     // Organization Members
     match /organization_members/{memberId} {
       allow create: if isAuthenticated();
+      allow read, update, delete: if isAuthenticated();
+    }
+
+    // Review Clicks
+    match /review_clicks/{clickId} {
+      allow create: if true; // Public can log a click
       allow read, update, delete: if isAuthenticated();
     }
 

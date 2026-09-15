@@ -30,12 +30,16 @@ export default function DashboardPage() {
     <div className="p-8 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Dashboard</h1>
-        <Button variant="outline" onClick={handleLogout}>Log Out</Button>
+        <div className="space-x-4">
+          <Button variant="outline" onClick={() => router.push('/customers')}>Customers</Button>
+          <Button variant="outline" onClick={() => router.push('/settings')}>Settings</Button>
+          <Button variant="destructive" onClick={handleLogout}>Log Out</Button>
+        </div>
       </div>
       <div className="bg-white p-6 rounded-lg shadow border">
         <p className="text-lg">Welcome back, <strong>{user.displayName || user.email}</strong>! 👋</p>
         <p className="text-gray-500 mt-2">
-          This is your central hub for managing review requests. Phase 1 Foundation setup is complete.
+          This is your central hub for managing review requests. Phase 1-3 are complete!
         </p>
       </div>
     </div>
